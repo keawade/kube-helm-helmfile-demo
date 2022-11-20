@@ -8,8 +8,8 @@ const app = express();
 app.use(morgan("dev"));
 
 app.get("/healthcheck", async (req, res) => {
-  console.log("Reporting that the service is live");
-  return res.json({ message: "Service is accepting requests." });
+  console.log("Reporting that the application is live");
+  return res.json({ message: "Application is accepting requests." });
 });
 
 app.get("/hello", async (req: Request<{ name?: string }>, res) => {

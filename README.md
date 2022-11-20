@@ -1,7 +1,7 @@
 # Introduction to Kubernetes
 
 This repository provides Kubernetes, Helm, and Helmfile configuration examples
-for a simple database-backed demo service.
+for a simple database-backed demo application.
 
 ## Directories
 
