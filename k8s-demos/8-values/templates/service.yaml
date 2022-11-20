@@ -1,0 +1,18 @@
+# ./8-values/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-express-app-v1
+  labels:
+    app.kubernetes.io/name: demo-express-app
+    app.kubernetes.io/version: "1"
+spec:
+  selector:
+    app.kubernetes.io/name: demo-express-app
+    app.kubernetes.io/version: "1"
+  type: LoadBalancer
+  ports:
+    - name: app-http
+      port: {{.Values.demoExpressApp.port}}
+      protocol: TCP
+      targetPort: http-web-svc

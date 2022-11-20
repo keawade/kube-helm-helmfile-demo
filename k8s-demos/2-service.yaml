@@ -1,0 +1,46 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-express-app-v1
+  labels:
+    app.kubernetes.io/name: demo-express-app
+    app.kubernetes.io/version: "1"
+spec:
+  containers:
+    - name: demo-express-app
+      image: demo-express-app:1
+      imagePullPolicy: Never
+      # Expose our application's listening port so the service can map it
+      # externally
+      ports:
+        - name: http-web-svc
+          containerPort: 3000
+# Here's our --- separator defining a new YAML document in this file
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-express-app-v1
+  labels:
+    app.kubernetes.io/name: demo-express-app
+    app.kubernetes.io/version: "1"
+spec:
+  # Here we see one reason that adding the name and version labels is considered
+  # a best practice. With the labels already in place, it is trivial to map a
+  # service configuration to our pod with a selector.
+  selector:
+    app.kubernetes.io/name: demo-express-app
+    app.kubernetes.io/version: "1"
+  # The LoadBalancer service type will allow us, in a local environment, to
+  # access the exposed port on our localhost. Exposing ports to external traffic
+  # in remote environments is much more complicated and is out of scope for this
+  # demo.
+  type: LoadBalancer
+  ports:
+    # Map the container's application port externally so other pods can access
+    # it
+    - name: app-http
+      # The external port we want to map out to
+      port: 3000
+      # The container's internal port we want to map
+      targetPort: http-web-svc

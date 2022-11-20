@@ -1,0 +1,35 @@
+# ./9-helmfile/helmfile.yaml
+repositories:
+  # Need to define a source repository for our Bitnami chart. This lets us
+  # declaratively define chart sources instead of having to manually configure
+  # them via the helm command.
+  - name: bitnami
+    url: https://charts.bitnami.com/bitnami
+
+releases:
+  - name: demo-express-app
+    # We'll reference the chart we created earlier
+    chart: ../8-values
+    # Provide values overrides
+    values:
+      - demoExpressApp:
+          port: 4242
+          database:
+            # Need to match the Bitnami chart's service name
+            username: cool-user
+            password: hunter2
+            name: its-a-cool-database
+    # Tell Helmfile to finish setting up PostgreSQL before deploying our app's
+    # chart
+    needs:
+      - postgresql
+
+  - name: postgresql
+    # Pull the `postgresql` chart from the `bitnami` repository we defined above
+    chart: bitnami/postgresql
+    # Provide values overrides
+    values:
+      - auth:
+          username: cool-user
+          password: hunter2
+          database: its-a-cool-database

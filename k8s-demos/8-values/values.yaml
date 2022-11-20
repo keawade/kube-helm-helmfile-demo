@@ -1,0 +1,10 @@
+# ./8-values/values.yaml
+demoExpressApp:
+  port: 3000
+
+  database:
+    username: demo
+    password: demo
+    address: postgresql.default.svc.cluster.local
+    port: 5432
+    name: demo-express-app

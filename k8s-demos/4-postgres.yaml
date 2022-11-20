@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-express-app-v1
+spec:
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  replicas: 3
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: demo-express-app
+      app.kubernetes.io/version: "1"
+
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: demo-express-app
+        app.kubernetes.io/version: "1"
+    spec:
+      containers:
+        - name: demo-express-app-v1
+          image: demo-express-app:1
+          imagePullPolicy: Never
+          ports:
+            - name: http-web-svc
+              containerPort: 3000
+          env:
+            # Add our database connection string env var
+            - name: DATABASE_CONNECTION_STRING
+              value: postgres://demo:demo@postgresql.default.svc.cluster.local:5432/demo-express-app
+---
+# Our existing app Service stays the same
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-express-app-v1
+  labels:
+    app.kubernetes.io/name: demo-express-app
+    app.kubernetes.io/version: "1"
+spec:
+  selector:
+    app.kubernetes.io/name: demo-express-app
+    app.kubernetes.io/version: "1"
+  type: LoadBalancer
+  ports:
+    - name: app-http
+      port: 3000
+      protocol: TCP
+      targetPort: http-web-svc
+---
+apiVersion: v1
+# We're just using a Pod for now as its quick and easy. We'll come back in a few
+# steps to implement a more robust solution.
+kind: Pod
+metadata:
+  name: postgresql
+  labels:
+    app.kubernetes.io/name: postgresql
+spec:
+  containers:
+    - name: postgresql
+      image: postgres:14
+      ports:
+        - name: postgresql-port
+          containerPort: 5432
+      env:
+        - name: POSTGRES_USER
+          value: demo
+        - name: POSTGRES_PASSWORD
+          value: demo
+        - name: POSTGRES_DB
+          value: demo-express-app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql
+spec:
+  selector:
+    app.kubernetes.io/name: postgresql
+  type: LoadBalancer
+  ports:
+    # Expose the default PostgreSQL port for use by other containers
+    - name: postgresql-port
+      port: 5432
+      targetPort: postgresql-port

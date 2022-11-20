@@ -1,0 +1,12 @@
+{
+  "overrides": [
+    {
+      "files": ["**/helmfile.yaml", "**/templates/*.yaml"],
+      "options": {
+        "bracketSpacing": false
+      }
+    }
+  ],
+  "proseWrap": "always",
+  "printWidth": 80
+}

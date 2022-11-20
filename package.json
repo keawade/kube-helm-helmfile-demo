@@ -1,0 +1,17 @@
+{
+  "name": "kube-helm-helmfile-demo",
+  "version": "1.0.0",
+  "description": "Introduction to Kubernetes, Helm, and Helmfile.",
+  "author": "Keith Wade <keawade@protonmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build:image": "docker build ./demo-express-app -t demo-express-app:1",
+    "run:image": "docker run -d --name demo-express-app -p 3000:3000 demo-express-app:1",
+    "stop:image": "docker stop demo-express-app && docker rm demo-express-app",
+    "docs:update": "npm run prettier && embedme README.md && npm run prettier",
+    "prettier": "prettier . --write"
+  },
+  "devDependencies": {
+    "prettier": "^2.7.1"
+  }
+}

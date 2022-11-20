@@ -1,0 +1,6 @@
+This chart has a hard coded dependency on an existing PostgreSQL instance.
+
+One way of creating that instance is to use the bitnami/postgresql chart.
+
+    helm repo add bitnami https://charts.bitnami.com/bitnami
+    helm install postgresql bitnami/postgresql --set auth.username=demo,auth.password=demo,auth.database=demo-express-app

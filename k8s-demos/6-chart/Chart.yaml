@@ -1,0 +1,9 @@
+# ./6-chart/Chart.yaml
+apiVersion: v2
+name: demo-express-app
+description: Demo Node + Express application
+type: application
+# Version of the Helm chart
+version: "1.0.0"
+# Version of the application managed by the Helm chart
+appVersion: "1.0.0"

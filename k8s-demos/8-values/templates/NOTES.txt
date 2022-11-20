@@ -1,0 +1,10 @@
+Installed demo-express-app chart.
+
+App listening on port {{ .Values.demoExpressApp.port }}.
+
+App will look for database at "{{- print "postgres://" .Values.demoExpressApp.database.address ":" .Values.demoExpressApp.database.port "/" .Values.demoExpressApp.database.name -}}"
+
+One way of creating that PostgreSQL instance is to use the bitnami/postgresql chart.
+
+    helm repo add bitnami https://charts.bitnami.com/bitnami
+    helm install postgresql bitnami/postgresql --set auth.username={{.Values.demoExpressApp.database.username}},auth.password=<password>,auth.database={{.Values.demoExpressApp.database.name}}

@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  demo:
+    build: .
+    environment:
+      DATABASE_CONNECTION_STRING: postgres://demo:demo@postgres:5432/demo
+    ports:
+      - 3000:3000
+
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: demo
+      POSTGRES_PASSWORD: demo
+      POSTGRES_DB: demo
+    ports:
+      - 5432:5432

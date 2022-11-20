@@ -1,0 +1,62 @@
+apiVersion: apps/v1
+# Note that we're using a Deployment kind now instead of a Pod
+kind: Deployment
+metadata:
+  name: demo-express-app-v1
+spec:
+  # Define a strategy to use for applying updates to the resources managed by
+  # this Deployment resource. This isn't very important for our demos but
+  # becomes important if you want to build on these examples later.
+  strategy:
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+
+  # Define a number of pod replicas to maintain. This configuration can get much
+  # more complex with conditional scaling but for our demos we'll just use a
+  # hard coded value.
+  replicas: 3
+  # We'll again use a selector to identify relevant resources. In this case
+  # we're specifying what pods are managed by this Deployment.
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: demo-express-app
+      app.kubernetes.io/version: "1"
+
+  # Define a template to use to create pods. We're no longer managing specific
+  # pod instances but are instead managing a collection of pods defined using
+  # this template and the replicas configuration above.
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: demo-express-app
+        app.kubernetes.io/version: "1"
+    spec:
+      containers:
+        - name: demo-express-app-v1
+          image: demo-express-app:1
+          imagePullPolicy: Never
+          ports:
+            - name: http-web-svc
+              containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-express-app-v1
+  labels:
+    app.kubernetes.io/name: demo-express-app
+    app.kubernetes.io/version: "1"
+spec:
+  # No Service changes are needed as we're targeting pods via labels and
+  # services are intended to abstract connection details for arbitrary numbers
+  # of pods.
+  selector:
+    app.kubernetes.io/name: demo-express-app
+    app.kubernetes.io/version: "1"
+  type: LoadBalancer
+  ports:
+    - name: app-http
+      port: 3000
+      protocol: TCP
+      targetPort: http-web-svc

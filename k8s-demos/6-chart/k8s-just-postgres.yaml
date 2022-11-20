@@ -1,0 +1,34 @@
+# ./6-chart/k8s-just-postgres.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: postgresql
+  labels:
+    app.kubernetes.io/name: postgresql
+spec:
+  containers:
+    - name: postgresql
+      image: postgres:14
+      ports:
+        - name: postgresql-port
+          containerPort: 5432
+      env:
+        - name: POSTGRES_USER
+          value: demo
+        - name: POSTGRES_PASSWORD
+          value: demo
+        - name: POSTGRES_DB
+          value: demo-express-app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql
+spec:
+  selector:
+    app.kubernetes.io/name: postgresql
+  type: LoadBalancer
+  ports:
+    - name: postgresql-port
+      port: 5432
+      targetPort: postgresql-port
