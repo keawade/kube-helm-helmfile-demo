@@ -15,7 +15,6 @@ releases:
       - demoExpressApp:
           port: 4242
           database:
-            # Need to match the Bitnami chart's service name
             username: cool-user
             password: hunter2
             name: its-a-cool-database
